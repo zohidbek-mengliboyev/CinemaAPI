@@ -1,5 +1,7 @@
+using CinemaAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +23,7 @@ namespace CinemaAPI
         {
 
             services.AddControllers();
+            services.AddDbContext<CinemaDbContext>(options => options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=CinemaDB;Integrated Security=True"));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CinemaAPI", Version = "v1" });
@@ -28,7 +31,7 @@ namespace CinemaAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CinemaDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -42,6 +45,7 @@ namespace CinemaAPI
             app.UseRouting();
 
             app.UseAuthorization();
+            dbContext.Database.EnsureCreated();
 
             app.UseEndpoints(endpoints =>
             {
