@@ -47,6 +47,7 @@ namespace CinemaAPI.Controllers
             var movie = _dbContext.Movies.Find(id);
             movie.Name = movieObj.Name;
             movie.Language = movieObj.Language;
+            movie.Rating = movieObj.Rating;
             _dbContext.SaveChanges();
         }
 
