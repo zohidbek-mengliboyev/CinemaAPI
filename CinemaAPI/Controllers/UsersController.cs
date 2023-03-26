@@ -3,6 +3,7 @@ using CinemaAPI.Data;
 using CinemaAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
 
 namespace CinemaAPI.Controllers
@@ -12,10 +13,14 @@ namespace CinemaAPI.Controllers
     public class UsersController : ControllerBase
     {
         private CinemaDbContext _dbContext;
+        private IConfiguration _configuration;
+        private readonly AuthService _auth;
 
-        public UsersController(CinemaDbContext dbContext)
+        public UsersController(CinemaDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
+            _auth = new AuthService(_configuration);
         }
 
         [HttpPost]
