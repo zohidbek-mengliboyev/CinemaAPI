@@ -109,7 +109,22 @@ namespace CinemaAPI.Controllers
             return Ok(reservationResult);
         }
 
-        public 
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var reservation = _dbContext.Reservations.Find(id);
+            if (reservation == null)
+            {
+                return NotFound("No record found against this Id");
+            }
+            else
+            {
+                _dbContext.Reservations.Remove(reservation);
+                _dbContext.SaveChanges();
+                return Ok("Record deleted");
+            }
+        }
 
     }
 }
