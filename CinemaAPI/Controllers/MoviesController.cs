@@ -177,7 +177,6 @@ namespace CinemaAPI.Controllers
                 _dbContext.SaveChanges();
                 return Ok("Record deleted");
             }
-            
         }
     }
 }

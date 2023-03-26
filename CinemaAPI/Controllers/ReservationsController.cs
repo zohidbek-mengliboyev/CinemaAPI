@@ -19,6 +19,11 @@ namespace CinemaAPI.Controllers
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reservationObj"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost]
         public IActionResult Post(Reservation reservationObj)
@@ -29,6 +34,10 @@ namespace CinemaAPI.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetReservations()
@@ -57,6 +66,50 @@ namespace CinemaAPI.Controllers
 
             return Ok(reservations);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{id}")]
+        public IActionResult GetReservationDetail(int id)
+        {
+            var reservationResult = _dbContext.Reservations
+                                .Join(
+                                        _dbContext.Users,
+                                        r => r.UserId,
+                                        c => c.Id,
+                                        (r, c) => new { r, c }
+                                     )
+                                .Join(
+                                        _dbContext.Movies,
+                                        rs => rs.r.MovieId,
+                                        m => m.Id,
+                                        (rs, m) => new { rs.r, rs.c, m }
+
+                                     )
+                                .Where(res => res.r.Id == id)
+                                .Select(rsv => new
+                                {
+                                    Id = rsv.r.Id,
+                                    ReservationTime = rsv.r.ReservationTime,
+                                    CustomerName = rsv.c.Name,
+                                    MovieName = rsv.m.Name,
+                                    Email = rsv.c.Email,
+                                    Quantity = rsv.r.Quantity,
+                                    Price = rsv.r.Price,
+                                    Phone = rsv.r.Phone,
+                                    PlayingDate = rsv.m.PlayingDate,
+                                    PlayingTime = rsv.m.PlayingTime
+                                })
+                                .FirstOrDefault();
+
+            return Ok(reservationResult);
+        }
+
+        public 
 
     }
 }
