@@ -27,14 +27,13 @@ namespace CinemaAPI.Controllers
             _dbContext = dbContext;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sort"></param>
-        /// <returns></returns>
+
         [HttpGet("[action]")]
-        public IActionResult AllMovies(string sort)
+        public IActionResult AllMovies(string sort, int? pageNumber, int? pageSize)
         {
+            var currentPageNumber = pageNumber ?? 1;
+            var currentPageSize = pageSize ?? 5;
+
             var movies = _dbContext.Movies.Select(movie => new
             {
                 Id = movie.Id,
@@ -49,11 +48,11 @@ namespace CinemaAPI.Controllers
             switch (sort)
             {
                 case "desc":
-                    return Ok(movies.OrderByDescending(m => m.Rating));
+                    return Ok(movies.Skip((currentPageNumber - 1) * currentPageSize).Take(currentPageSize).OrderByDescending(m => m.Rating));
                 case "asc":
-                    return Ok(movies.OrderBy(m => m.Rating));
+                    return Ok(movies.Skip((currentPageNumber - 1) * currentPageSize).Take(currentPageSize).OrderBy(m => m.Rating));
                 default:
-                    return Ok(movies);
+                    return Ok(movies.Skip((currentPageNumber - 1) * currentPageSize).Take(currentPageSize));
             }
         }
 
