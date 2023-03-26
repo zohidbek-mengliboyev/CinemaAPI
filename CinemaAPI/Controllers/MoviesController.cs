@@ -27,7 +27,13 @@ namespace CinemaAPI.Controllers
             _dbContext = dbContext;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sort"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet("[action]")]
         public IActionResult AllMovies(string sort, int? pageNumber, int? pageSize)
         {
@@ -56,6 +62,11 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpGet("[action]/{id}")]
         public IActionResult MovieDetail(int id)
@@ -66,6 +77,20 @@ namespace CinemaAPI.Controllers
                 return NotFound();
             }
             return Ok(movie);
+        }
+
+        [Authorize]
+        [HttpGet("[action]")]
+        public IActionResult FindMovies(string movieName)
+        {
+            var movies = _dbContext.Movies.Where(movie => movie.Name.StartsWith(movieName)).Select(movie => new
+            {
+                Id = movie.Id,
+                Name = movie.Name,
+                ImageUrl = movie.ImageUrl
+            });
+
+            return Ok(movies);
         }
 
         /// <summary>
