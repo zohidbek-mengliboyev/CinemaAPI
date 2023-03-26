@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace CinemaAPI.Controllers
 {
@@ -27,5 +28,35 @@ namespace CinemaAPI.Controllers
             _dbContext.SaveChanges();
             return StatusCode(StatusCodes.Status201Created);
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult GetReservations()
+        {
+            var reservations = _dbContext.Reservations
+                                .Join(
+                                        _dbContext.Users,
+                                        r => r.UserId,
+                                        c => c.Id,
+                                        (r, c) => new { r, c }
+                                     )
+                                .Join(
+                                        _dbContext.Movies,
+                                        rs => rs.r.MovieId,
+                                        m => m.Id,
+                                        (rs, m) => new { rs.r, rs.c, m }
+
+                                     )
+                                .Select(rsv => new
+                                {
+                                    Id = rsv.r.Id,
+                                    ReservationTime = rsv.r.ReservationTime,
+                                    CustomerName = rsv.c.Name,
+                                    MovieName = rsv.m.Name
+                                });
+
+            return Ok(reservations);
+        }
+
     }
 }
