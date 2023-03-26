@@ -28,7 +28,7 @@ namespace CinemaAPI
 
             services.AddControllers();
             services.AddMvc().AddXmlSerializerFormatters();
-            services.AddDbContext<CinemaDbContext>(options => options.UseSqlServer(@"Data Source=(localdb)\ProjectModels;Integrated Security=SSPI;MultipleActiveResultSets=true;Pooling=false;Initial Catalog=MyCinemaDb;ConnectRetryCount=0;"));
+            services.AddDbContext<CinemaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CinemaDBConnection")));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -69,6 +69,8 @@ namespace CinemaAPI
                     }
                 });
             });
+
+            services.BuildServiceProvider().GetService<CinemaDbContext>().Database.Migrate();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
