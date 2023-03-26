@@ -25,6 +25,9 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Language")
                         .HasColumnType("nvarchar(max)");
 

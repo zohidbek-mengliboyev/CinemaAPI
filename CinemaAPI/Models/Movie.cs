@@ -12,5 +12,6 @@ namespace CinemaAPI.Models
 
         [NotMapped]
         public IFormFile Image { get; set; }
+        public string ImageUrl { get; set; }
     }
 }
