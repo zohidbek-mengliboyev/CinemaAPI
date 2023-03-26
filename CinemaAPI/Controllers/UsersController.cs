@@ -39,7 +39,7 @@ namespace CinemaAPI.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 Password = SecurePasswordHasherHelper.Hash(user.Password),
-                Role = "Users"
+                Role = "User"
             };
             _dbContext.Users.Add(userObj);
             _dbContext.SaveChanges();
