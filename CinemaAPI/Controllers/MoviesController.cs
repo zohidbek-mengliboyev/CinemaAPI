@@ -30,9 +30,10 @@ namespace CinemaAPI.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="sort"></param>
         /// <returns></returns>
         [HttpGet("[action]")]
-        public IActionResult AllMovies()
+        public IActionResult AllMovies(string sort)
         {
             var movies = _dbContext.Movies.Select(movie => new
             {
@@ -45,7 +46,15 @@ namespace CinemaAPI.Controllers
                 ImageUrl = movie.ImageUrl
             });
 
-            return Ok(movies);
+            switch (sort)
+            {
+                case "desc":
+                    return Ok(movies.OrderByDescending(m => m.Rating));
+                case "asc":
+                    return Ok(movies.OrderBy(m => m.Rating));
+                default:
+                    return Ok(movies);
+            }
         }
 
         [Authorize]
