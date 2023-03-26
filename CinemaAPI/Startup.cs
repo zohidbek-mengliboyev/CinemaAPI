@@ -24,7 +24,7 @@ namespace CinemaAPI
 
             services.AddControllers();
             services.AddMvc().AddXmlSerializerFormatters();
-            services.AddDbContext<CinemaDbContext>(options => options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=CinemaDB;Integrated Security=True"));
+            services.AddDbContext<CinemaDbContext>(options => options.UseSqlServer(@"Data Source=(localdb)\ProjectModels;Integrated Security=SSPI;MultipleActiveResultSets=true;Pooling=false;Initial Catalog=CinemaDB;ConnectRetryCount=0;"));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CinemaAPI", Version = "v1" });

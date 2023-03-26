@@ -1,7 +1,10 @@
 ﻿using CinemaAPI.Data;
 using CinemaAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,11 +36,27 @@ namespace CinemaAPI.Controllers
         }
 
         // POST api/<MoviesController>
+        //[HttpPost]
+        //public void Post([FromBody] Movie movie)
+        //{
+        //    _dbContext.Movies.Add(movie);
+        //    _dbContext.SaveChanges();
+        //}
+
         [HttpPost]
-        public void Post([FromBody] Movie movie)
+        public IActionResult Post([FromForm] Movie movieObj)
         {
-            _dbContext.Movies.Add(movie);
+            
+            var guid = Guid.NewGuid();
+            var filePath = Path.Combine("wwwroot", guid + ".jpg");
+            if (movieObj.Image != null)
+            {
+                var fileStream = new FileStream(filePath, FileMode.Create);
+                movieObj.Image.CopyTo(fileStream);
+            }
+            _dbContext.Movies.Add(movieObj);
             _dbContext.SaveChanges();
+            return Ok();
         }
 
         // PUT api/<MoviesController>/5
