@@ -35,6 +35,12 @@ namespace CinemaAPI.Controllers
             return movie;
         }
 
+        [HttpGet("[action]/{id}")]
+        public int Test(int id)
+        {
+            return id;
+        }
+
         // POST api/<MoviesController>
         //[HttpPost]
         //public void Post([FromBody] Movie movie)
