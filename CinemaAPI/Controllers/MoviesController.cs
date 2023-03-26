@@ -9,16 +9,28 @@ using System.Linq;
 
 namespace CinemaAPI.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
     {
         private CinemaDbContext _dbContext;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbContext"></param>
         public MoviesController(CinemaDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("[action]")]
         public IActionResult AllMovies()
         {
@@ -36,6 +48,23 @@ namespace CinemaAPI.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
+        [HttpGet("[action]/{id}")]
+        public IActionResult MovieDetail(int id)
+        {
+            var movie = _dbContext.Movies.Find(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return Ok(movie);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="movieObj"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Post([FromForm] Movie movieObj)
@@ -55,6 +84,12 @@ namespace CinemaAPI.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="movieObj"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromForm] Movie movieObj)
@@ -89,6 +124,11 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
