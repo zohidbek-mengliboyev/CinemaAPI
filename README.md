@@ -1,1 +1,1 @@
-# Cinema Booking System | Movie Ticket Reservation system
+# Cinema Booking | Movie Ticket Reservation system
