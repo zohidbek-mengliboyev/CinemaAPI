@@ -62,6 +62,7 @@ namespace CinemaAPI.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, userEmail.Role)
             };
             var token = _auth.GenerateAccessToken(claims);
 
